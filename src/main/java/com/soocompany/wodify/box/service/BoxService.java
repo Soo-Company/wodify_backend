@@ -10,6 +10,7 @@ import com.soocompany.wodify.member.domain.Member;
 import com.soocompany.wodify.member.repository.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -17,6 +18,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectAclRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
@@ -38,15 +44,21 @@ public class BoxService {
 
     private final BoxRepository boxRepository;
     private final MemberRepository memberRepository;
+    private final S3Client s3Client;
+
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+
 
     @Autowired
-    public BoxService(BoxRepository boxRepository, MemberRepository memberRepository) {
+    public BoxService(BoxRepository boxRepository, MemberRepository memberRepository, S3Client s3Client) {
         this.boxRepository = boxRepository;
         this.memberRepository = memberRepository;
+        this.s3Client = s3Client;
     }
 
 
-    public BoxSaveReqDto boxCreate(BoxSaveReqDto dto) throws IOException {
+    public BoxSaveReqDto boxCreate(BoxSaveReqDto dto) {
         // 현재 로그인한 사용자 ID 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String memberId = authentication.getName();
@@ -65,19 +77,33 @@ public class BoxService {
         Member newMember = memberRepository.findByEmailAndDelYn(member.getEmail(), "N")
                 .orElseThrow(() -> new EntityNotFoundException("Test Ceo Initial Data Loader Exception"));
 
-        // MultipartFile에서 파일 저장 경로 얻기
+        // MultipartFile에서 파일 저장 경로 얻기 및 AWS S3에 업로드
         MultipartFile logoFile = dto.getLogoPath();
-        String logoPath = null;
+        String s3Path = null;
         if (logoFile != null && !logoFile.isEmpty()) {
-            byte[] bytes = logoFile.getBytes();
-            Path path = Paths.get("C:/Users/rnjsc/Desktop/tmp/", UUID.randomUUID() + "_" + logoFile.getOriginalFilename());
-            Files.write(path, bytes, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
-            logoPath = path.toString();
+            try {
+                byte[] bytes = logoFile.getBytes();
+                String fileName = UUID.randomUUID() + "_" + logoFile.getOriginalFilename();
+                Path path = Paths.get("C:/Users/rnjsc/Desktop/tmp/", fileName);
+
+                // Local PC에 임시 저장
+                Files.write(path, bytes, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+
+                // AWS S3에 업로드
+                PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                        .bucket(bucket)
+                        .key(fileName)
+                        .build();
+                PutObjectResponse putObjectResponse = s3Client.putObject(putObjectRequest, RequestBody.fromFile(path));
+                s3Path = s3Client.utilities().getUrl(a -> a.bucket(bucket).key(fileName)).toExternalForm();
+            } catch (IOException e) {
+                throw new RuntimeException("이미지 저장 실패", e);
+            }
         }
 
         Box box = boxRepository.save(dto.toEntity(member));
-        if (logoPath != null) {
-            box.updateLogo(logoPath);
+        if (s3Path != null) {
+            box.updateLogo(s3Path);
             boxRepository.save(box);
         }
 
@@ -88,7 +114,7 @@ public class BoxService {
     }
 
 
-    public BoxSaveReqDto boxUpdate(Long id, BoxUpdateReqDto dto) throws IOException {
+    public BoxSaveReqDto boxUpdate(Long id, BoxUpdateReqDto dto){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String memberId = authentication.getName();
 
@@ -105,13 +131,33 @@ public class BoxService {
             throw new SecurityException(errorMessage);
         }
 
-        // 파일 저장 로직 처리
+        // 파일 저장 로직 처리 및 AWS S3에 업로드
         MultipartFile logoFile = dto.getLogo();
         if (logoFile != null && !logoFile.isEmpty()) {
-            byte[] bytes = logoFile.getBytes();
-            Path path = Paths.get("C:/Users/rnjsc/Desktop/tmp/", UUID.randomUUID() + "_" + logoFile.getOriginalFilename());
-            Files.write(path, bytes, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
-            box.updateLogo(path.toString());
+            byte[] bytes = null;
+            try {
+                bytes = logoFile.getBytes();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            String fileName = UUID.randomUUID() + "_" + logoFile.getOriginalFilename();
+            Path path = Paths.get("C:/Users/rnjsc/Desktop/tmp/", fileName);
+
+            // Local PC에 임시 저장
+            try {
+                Files.write(path, bytes, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            // AWS S3에 업로드
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(fileName)
+                    .build();
+            PutObjectResponse putObjectResponse = s3Client.putObject(putObjectRequest, RequestBody.fromFile(path));
+            String s3Path = s3Client.utilities().getUrl(a -> a.bucket(bucket).key(fileName)).toExternalForm();
+            box.updateLogo(s3Path);
         }
 
         // 로고 업데이트를 제외한 다른 필드만 업데이트
