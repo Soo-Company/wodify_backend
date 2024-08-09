@@ -55,6 +55,7 @@ public class RecordService {
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm");
             LocalTime exerciseTime = LocalTime.parse(dto.getExerciseTime(), dateTimeFormatter);
 
+            reservationDetail.updateRecord(record);
             record.existedRecordUpdateEntity(dto, exerciseTime);
             return record.detFromEntity();
         }
@@ -75,6 +76,7 @@ public class RecordService {
         LocalTime exerciseTime = LocalTime.parse(dto.getExerciseTime(), dateTimeFormatter); // 현재 받아오는 운동수행시간(string) // 앞단에서 무슨값으로(string? localtime?) 들어올지 몰라서 string으로 생각하고 처리해서 넣는다.
 
         Record record = recordReository.save(dto.toEntity(reservationDetail, exerciseTime));
+        reservationDetail.updateRecord(record);
         return record.detFromEntity();
     }
 

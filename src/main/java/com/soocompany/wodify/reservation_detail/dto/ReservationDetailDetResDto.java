@@ -17,9 +17,9 @@ public class ReservationDetailDetResDto {
     private Long id;
     private LocalDate date;
     private LocalTime time;
-    private Long memberId;
-    private String memberName;
-    private Long boxId;
-    private String BoxName;
+    private String coachName;
+    private Long wodId;
+    private Long recordId;
+    private String recordSnF;
 
 }
