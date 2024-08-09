@@ -1,4 +1,5 @@
 package com.soocompany.wodify.wod.service;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.soocompany.wodify.box.domain.Box;
 import com.soocompany.wodify.box.repository.BoxRepository;
 import com.soocompany.wodify.member.domain.Member;
@@ -13,9 +14,11 @@ import com.soocompany.wodify.wod.repository.WodRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
@@ -57,7 +60,7 @@ public class WodService {
         return wodRepository.save(wod);
     }
 
-    public WodResDto wodFind(WodFindReqDto wodFindReqDto) {
+    public WodResDto wodFind(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
         String id = SecurityContextHolder.getContext().getAuthentication().getName();
         Member member = memberRepository.findByIdAndDelYn(Long.parseLong(id), "N").orElseThrow(() -> {
             log.error("wodFind() : 해당 이메일의 멤버를 찾을 수 없습니다.");
@@ -67,8 +70,7 @@ public class WodService {
             log.error("wodFind() : 해당 ID의 박스를 찾을 수 없습니다.");
             return new EntityNotFoundException("해당 ID의 박스를 찾을 수 없습니다.");
         });
-        System.out.println("wodFindReqDto.getDate() = " + wodFindReqDto.getDate());
-        Wod wod = wodRepository.findByBoxIdAndDateAndDelYn(box.getId(), wodFindReqDto.getDate(), "N").orElseThrow(() -> {
+        Wod wod = wodRepository.findByBoxIdAndDateAndDelYn(box.getId(), date, "N").orElseThrow(() -> {
             log.error("wodFind() : 해당 날짜에 등록된 WOD 가 없습니다.");
             return new EntityNotFoundException("해당 날짜에 등록된 WOD 가 없습니다.");
         });
