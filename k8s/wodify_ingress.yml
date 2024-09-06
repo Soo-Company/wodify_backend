@@ -6,7 +6,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/proxy-body-size: "100m"  # 여기서 최대 요청 크기를 설정
-    nginx.ingress.kubernetes.io/client-body-buffer-size: "100m"
+    nginx.ingress.kubernetes.io/client-body-buffer-size: "16m"
 spec:
   tls:
     - hosts:
