@@ -1,7 +1,18 @@
+server:
+  port: 8080
+  tomcat:
+    max-http-post-size: 104857600 # 100mb
+    max-swallow-size: 104857600 # 100mb
+
 spring:
   config:
     activate:
       on-profile: prod
+      
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://${DB_HOST}:3306/wodify
@@ -16,6 +27,7 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: false
+    open-in-view: true
   redis:
     host: ${REDIS_HOST}
     port: 6379

@@ -71,6 +71,7 @@ public class SseController implements MessageListener {
         emitters.put(memberId, emitter);
         emitter.onCompletion(() -> emitters.remove((memberId)));
         emitter.onTimeout(() -> emitters.remove(memberId));
+        emitter.onError((e) ->emitters.remove(memberId));
 
         try {
             emitter.send(SseEmitter.event().name("connect").data("connected!"));
@@ -79,60 +80,36 @@ public class SseController implements MessageListener {
         }
         subscribeChannel(memberId);
         // Keep-Alive 메시지 주기적으로 전송 (예: 30초마다)
-        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
-            try {
-                emitter.send(SseEmitter.event().name("keepAlive").data("ping"));
-            } catch (IOException e) {
-                emitters.remove(memberId); // 에러 발생 시 emitter 제거
-            }
-        }, 30, 30, TimeUnit.SECONDS);
+//        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
+//            try {
+//                emitter.send(SseEmitter.event().name("keepAlive").data("ping"));
+//            } catch (IOException e) {
+//                emitters.remove(memberId); // 에러 발생 시 emitter 제거
+//            }
+//        }, 30, 30, TimeUnit.SECONDS);
 
         return emitter;
     }
 
     //예약 생성 알림
     public void publishMessage(ReservationDetailDetResDto dto, String memberId) {
-        SseEmitter emitter = emitters.get(memberId);
-        if (emitter != null) {
-            try {
-                emitter.send(SseEmitter.event().name("reservation").data(dto));
-            }catch (IOException e){
-                throw new RuntimeException(e.getMessage());
-            }
-        }else { // 현재 서버의 받는 이의 emitter 정보가 없는 경우
-            sseRedisTemplate.convertAndSend(memberId, dto);
-        }
+        log.info("publishMessage - 예약 생성 알림");
+        sseRedisTemplate.convertAndSend(memberId, dto);
     }
 
     //명예의 전당 알림
     public void publishHallOfFameMessage(String memberId) {
-        SseEmitter emitter = emitters.get(memberId);
+        log.info("publishHallOfFameMessage - 명예의 전당 알림");
         ReservationDetailDetResDto dto = ReservationDetailDetResDto.builder()
                 .check("hallOfFame")
                 .build();
-        if (emitter != null) {
-            try {
-                emitter.send(SseEmitter.event().name("hallOfFame").data(dto));
-            }catch (IOException e){
-                throw new RuntimeException(e);
-            }
-        }else { // 현재 서버의 받는 이의 emitter 정보가 없는 경우
-            sseRedisTemplate.convertAndSend(memberId, dto);
-        }
+        sseRedisTemplate.convertAndSend(memberId, dto);
     }
 
     //예약 한시간 전 알림
     public void publishReservationMessage(ReservationDetailDetResDto dto, String memberId) {
-        SseEmitter emitter = emitters.get(memberId);
-        if (emitter != null) {
-            try {
-                emitter.send(SseEmitter.event().name("reservationDetail").data(dto));
-            }catch (IOException e){
-                throw new RuntimeException(e);
-            }
-        }else { // 현재 서버의 받는 이의 emitter 정보가 없는 경우
-            sseRedisTemplate.convertAndSend(memberId, dto);
-        }
+        log.info("publishReservationMessage - 예약 한시간 전 알림");
+        sseRedisTemplate.convertAndSend(memberId, dto);
     }
 
 

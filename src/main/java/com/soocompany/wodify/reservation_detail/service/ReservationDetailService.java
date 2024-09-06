@@ -114,7 +114,11 @@ public class ReservationDetailService {
         }
         Member boxRepresentative = box.getMember();
         reservationDetailDetResDto.setCheck("reservation");
-        sseController.publishMessage(reservationDetailDetResDto, String.valueOf(boxRepresentative.getId()));
+        try{
+            sseController.publishMessage(reservationDetailDetResDto, String.valueOf(boxRepresentative.getId()));
+        }catch (Exception e) {
+            log.error("알림은 안보내졌지만 예약 성공");
+        }
         reservationManageEventHandler.publish(new ReservationManageEvent(reservation.getId(), 1));
         return reservationDetailDetResDto;
     }

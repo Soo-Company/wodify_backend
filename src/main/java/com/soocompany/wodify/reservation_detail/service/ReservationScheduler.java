@@ -7,6 +7,7 @@ import com.soocompany.wodify.reservation_detail.domain.ReservationDetail;
 import com.soocompany.wodify.reservation_detail.dto.ReservationDetailDetResDto;
 import com.soocompany.wodify.reservation_detail.repository.ReservationDetailRepository;
 import lombok.extern.slf4j.Slf4j;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @Component
 @Slf4j
+
 public class ReservationScheduler {
 
     private final SseController sseController;
@@ -38,14 +40,15 @@ public class ReservationScheduler {
         this.schedulreRedisTemplate = schedulreRedisTemplate;
     }
 
+    @SchedulerLock(name = "cron_lock_reservation", lockAtLeastFor = "20s", lockAtMostFor = "50s")
     @Scheduled(cron="0 0/1 * * * *") // test
 //    @Scheduled(cron="0 0/5 * * * *")  // test
     @Transactional
     public void alarmReservation(){
-        String lockKey = "reservationLock";
-        Boolean isLocked = schedulreRedisTemplate.opsForValue().setIfAbsent(lockKey, "true", Duration.ofSeconds(90)); // 60초간 락 유지
-        if(Boolean.TRUE.equals(isLocked)){
-            try {
+//        String lockKey = "reservationLock";
+//        Boolean isLocked = schedulreRedisTemplate.opsForValue().setIfAbsent(lockKey, "true", Duration.ofSeconds(90)); // 60초간 락 유지
+//        if(Boolean.TRUE.equals(isLocked)){
+//            try {
                 log.info("예약 알림 : 현재 서버에서 스케쥴러 실행중");
                 LocalDate date = LocalDate.now();
                 List<Reservation> reservationList = reservationRepository.findAllByDateAndDelYn(date, "N");
@@ -62,11 +65,11 @@ public class ReservationScheduler {
                         }
                     }
                 }
-            }finally {
-                schedulreRedisTemplate.delete(lockKey);
-            }
-        }else {
-            log.info("예약 알림 : 다른 서버에서 스케쥴러 실행중");
-        }
+//            }finally {
+//                schedulreRedisTemplate.delete(lockKey);
+//            }
+//        }else {
+//            log.info("예약 알림 : 다른 서버에서 스케쥴러 실행중");
+//        }
     }
 }

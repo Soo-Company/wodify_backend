@@ -34,7 +34,14 @@ dependencies {
 	//redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	//redisson
-//	implementation 'org.redisson:redisson-spring-boot-starter:3.17.0'
+	implementation 'org.redisson:redisson-spring-boot-starter:3.17.0'
+
+	//shedlock
+	implementation 'net.javacrumbs.shedlock:shedlock-spring:4.44.0'
+	implementation 'net.javacrumbs.shedlock:shedlock-provider-redis-spring:4.44.0'
+	implementation 'net.javacrumbs.shedlock:shedlock-provider-jdbc-template:4.44.0'
+
+
 	//rabbitmq
 	implementation 'org.springframework.boot:spring-boot-starter-amqp'
 

@@ -13,6 +13,7 @@ import com.soocompany.wodify.reservation_detail.controller.SseController;
 import com.soocompany.wodify.reservation_detail.domain.ReservationDetail;
 import com.soocompany.wodify.reservation_detail.repository.ReservationDetailRepository;
 import lombok.extern.slf4j.Slf4j;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
@@ -58,13 +59,11 @@ public class HallOfFameScheduler {
 
 
     //    @Scheduled(cron = "0 0 0 * * *")  //자정
+    @SchedulerLock(name = "cron_lock", lockAtLeastFor = "20s", lockAtMostFor = "50s")
     @Scheduled(cron = "0 * * * * *")
     @Transactional
     public void updateHallOfFame() throws InterruptedException{
-        String lockKey = "hallOfFameLock";
-        Boolean isLocked = redisTemplate.opsForValue().setIfAbsent(lockKey, "true", Duration.ofSeconds(90)); // 60초 동안 락 유지
-        if (Boolean.TRUE.equals(isLocked)) {
-            try{
+//        try{
                 log.info("명예의 전당 : 현재 서버에서 스케쥴러 실행중");
                 for(Box box : boxRepository.findByDelYn("N")){
                     //각 박스의 멤버 리스트
@@ -112,15 +111,15 @@ public class HallOfFameScheduler {
                     }
 
                 }
-            }finally {
-                //작업 끝난 후 락 해제
-                redisTemplate.delete(lockKey);
-
-            }
-        }else{
-            log.info("명예의 전당 : 다른 서버에서 스케쥴러 실행중");
-//            System.out.println("다른 서버에서 스케쥴러 실행중");
-        }
+//            }finally {
+//                //작업 끝난 후 락 해제
+//                redisTemplate.delete(lockKey);
+//
+//            }
+//        }else{
+//            log.info("명예의 전당 : 다른 서버에서 스케쥴러 실행중");
+////            System.out.println("다른 서버에서 스케쥴러 실행중");
+//        }
 
 
 
