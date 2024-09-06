@@ -1,8 +1,8 @@
 server:
   port: 8080
   tomcat:
-    max-http-post-size: 104857600
-    max-swallow-size: 104857600
+    max-http-post-size: 104857600 # 100mb
+    max-swallow-size: 104857600 # 100mb
 
 spring:
   config:
