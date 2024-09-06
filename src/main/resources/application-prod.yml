@@ -1,12 +1,13 @@
+server:
+  port: 8080
+  tomcat:
+    max-http-post-size: 104857600
+    max-swallow-size: 104857600
+
 spring:
   config:
     activate:
       on-profile: prod
-  server:
-    port: 8080
-      tomcat:
-        max-http-post-size: 3221225472  # 3GB
-        max-swallow-size: 3221225472    # 3GB
       
   servlet:
     multipart:
