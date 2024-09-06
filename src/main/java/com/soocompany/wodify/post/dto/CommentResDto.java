@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Data
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 public class CommentResDto{
     private Long id;
     private Long memberId;
+    private Long parentId;
     private String name;
     private String comment;
     private List<CommentResDto> replies;
@@ -26,6 +28,7 @@ public class CommentResDto{
         return CommentResDto.builder()
                 .id(comment.getId())
                 .memberId(comment.getMember().getId())
+                .parentId(Optional.ofNullable(comment.getParent()).map(Comment::getId).orElse(null))
                 .name(comment.getMember().getName())
                 .comment(comment.getComment())
                 .replies(comment.getReplies().stream()

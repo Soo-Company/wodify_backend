@@ -30,6 +30,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-logging'
 	//aws
 	implementation 'software.amazon.awssdk:s3:2.17.58'
+
 	//redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	//redisson
@@ -39,7 +40,6 @@ dependencies {
 	implementation 'net.javacrumbs.shedlock:shedlock-spring:4.44.0'
 	implementation 'net.javacrumbs.shedlock:shedlock-provider-redis-spring:4.44.0'
 	implementation 'net.javacrumbs.shedlock:shedlock-provider-jdbc-template:4.44.0'
-
 
 	//rabbitmq
 	implementation 'org.springframework.boot:spring-boot-starter-amqp'
