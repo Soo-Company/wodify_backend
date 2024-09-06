@@ -30,6 +30,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-logging'
 	//aws
 	implementation 'software.amazon.awssdk:s3:2.17.58'
+
 	//redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	//redisson
@@ -44,6 +45,10 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	implementation 'org.springframework.session:spring-session-core' // 기본 세션 관리
+	implementation 'org.springframework.session:spring-session-data-redis' // Redis를 사용할 경우 추가
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.539' // 최신 버전 확인 필요. AWS SDK for S3
 
 }
 
