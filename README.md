@@ -2,6 +2,8 @@
   ![header](https://github.com/user-attachments/assets/32d5e016-5266-4f01-9a19-97c61c369b2a)
 
 ## 프로젝트 개요
+WODIFY는 기존의 비체계적인 방식으로 이루어지던 크로스핏 박스 회원들의 WOD(Workout of the Day) 예약 및 운동 기록 방식을 디지털화하여 효율적이고 체계적인 관리 시스템을 제공합니다. 기존에는 회원들이 채팅방에서의 선착순 예약이나 커뮤니티 게시글의 댓글을 통해 WOD에 참여할 수 있었고, 운동 기록은 박스 내 칠판에 아날로그 형식으로 작성하는 방식이었습니다. 이러한 비효율적이고 혼란을 초래할 수 있는 방식을 개선하기 위해, WODIFY는 온라인에서 WOD 예약과 운동 기록을 간편하게 처리할 수 있도록 설계되었습니다.
+이 시스템은 박스 코치가 WOD를 계획하고 예약을 받을 수 있는 기능을 제공하며, 회원들은 자신에게 맞는 시간대에 예약을 진행할 수 있습니다. 또한, 회원들은 자신의 운동 기록을 시스템에 입력하여, 체계적으로 관리하고 성과를 추적할 수 있습니다. 이를 통해 크로스핏 박스의 운영 효율성을 높이고, 회원들의 만족도와 참여도를 극대화하는 것이 목표입니다.
 
 ## 개발 환경
 <div>   
@@ -96,16 +98,18 @@ hyun331">신승현</a>
   </div>
 <a href="https://www.figma.com/design/7HfxLQ1e75enbmIxMYC4RF/view?node-id=0-1&t=TMOrO564XQIz5Jtv-0">문서 링크</a>
 
+## 시스템 아키텍쳐
+![wodify_아키텍처](https://github.com/user-attachments/assets/7868c558-1c07-4726-8bcc-f0e8ec06ec03)
 
 ## Api 명세서 
 <details>
-  <summary> Member </summary>
+  <summary> 회원 </summary>
 
   ![api-member](https://github.com/user-attachments/assets/d9fcbfe9-9950-49ee-9820-d875248ae645)
 </details>
 
 <details>
-  <summary> 회원 등록 - Registration Info </summary>
+  <summary> 회원 등록  </summary>
 
   ![api-registrationInfo](https://github.com/user-attachments/assets/e727d350-1356-45f6-8d52-348e78b2a6c6)
 
@@ -118,7 +122,7 @@ hyun331">신승현</a>
 </details>
 
 <details>
-  <summary> Box </summary>
+  <summary> 박스 </summary>
 
   ![api-box](https://github.com/user-attachments/assets/c9a43554-8e13-483c-8e63-3f563b234cf6)
 </details>
@@ -367,3 +371,170 @@ hyun331">신승현</a>
 ![스크린샷 2024-08-20 233107](https://github.com/user-attachments/assets/2277d1d7-5ed2-4160-91b0-bb180ad393f5)
 
 </details>
+
+## 프로젝트 시연
+<details>  
+  
+<summary> 회원가입 </summary>
+
+![유저 회원가입](https://github.com/user-attachments/assets/d4c35ff2-0a10-47f2-bccd-f5608a87151b)
+</details>
+
+
+<details>  
+  
+<summary> 로그인/로그아웃 </summary>
+
+![로그인-로그아웃-2](https://github.com/user-attachments/assets/a89b339c-6354-4f97-9386-533df335fb3f)
+</details>
+
+
+<details>  
+  
+<summary> 마이페이지 </summary>
+-회원 정보 조회, 정보 수정, 코치의 경우 박스 변경
+
+![마이페이지-2](https://github.com/user-attachments/assets/7ab3f495-533a-42b9-b456-76866c20c70d)
+</details>
+
+<details>  
+  
+<summary> 기록 </summary>
+-회원 정보 조회, 정보 수정, 코치의 경우 박스 변경
+
+![기록생성](https://github.com/user-attachments/assets/33dd9279-6b15-43af-bc20-4232b45d7cac)
+
+![회원 기록보기](https://github.com/user-attachments/assets/0e1f6e6e-2459-420f-a685-0ba57d5af945)
+</details>
+
+
+
+<details>  
+  
+<summary> 명예의 전당 </summary>
+
+![명예의전당-2](https://github.com/user-attachments/assets/f8db04cc-dd0d-4e12-b630-944ab73e8838)
+명예의 전당 알림
+![명예의전당_알림_2](https://github.com/user-attachments/assets/c0ac328b-15cb-435f-ae3c-7cbe7b688662)
+</details>
+
+<details>  
+  
+<summary> 박스 코치 등록 </summary>
+
+![박스코치등록](https://github.com/user-attachments/assets/10ad822a-1fa2-4a33-b714-cbf4fdedd32b)
+</details>
+
+
+<details>  
+  
+<summary> 박스 회원 등록 </summary>
+
+![회원등록_연장_등록](https://github.com/user-attachments/assets/c47fde45-b117-4129-af02-2c80c4fcf748)
+</details>
+
+
+<details>  
+  
+<summary> 정지정보 </summary>
+
+![정지해제영상](https://github.com/user-attachments/assets/8e3f18f3-8751-470b-a06b-718cf3577b95)
+</details>
+
+
+<details>  
+  
+<summary> 수업 </summary>
+
+![예약만들기-최종](https://github.com/user-attachments/assets/b544a0ba-32a2-4922-a2b0-a846ab3f7947)
+
+</details>
+
+
+<details>  
+  
+<summary> 예약 </summary>
+
+![예약하기-제발](https://github.com/user-attachments/assets/57420bfe-15a1-46d5-8b01-8a545bce4858)
+
+</details>
+
+<details>  
+  
+<summary> 박스 생성 </summary>
+
+![박스 생성](https://github.com/user-attachments/assets/ca526449-3c3b-403f-8bdf-7e6e00b42cb2)
+
+</details>
+
+<details>  
+  
+<summary> 박스 수정 </summary>
+
+![박스 업데이트](https://github.com/user-attachments/assets/f4c8dce4-f318-4f02-ac52-6fe44f432940)
+
+</details>
+
+<details>  
+  
+<summary> 박스 삭제 </summary>
+
+![박스삭제](https://github.com/user-attachments/assets/57800151-df20-49e2-b4d2-2cc953936190)
+
+</details>
+
+
+<details>  
+  
+<summary> 내 박스  </summary>
+
+![내 박스 보기](https://github.com/user-attachments/assets/1e963575-b9eb-45b6-af8e-3ec769444109)
+
+</details>
+
+<details>  
+  
+<summary> 박스 조회 및 상세조회  </summary>
+
+![박스 리스트](https://github.com/user-attachments/assets/f68a3ac3-25df-4ccf-9e4a-8ade665791bd)
+
+</details>
+
+<details>  
+  
+<summary> 와드 조회 및 생성  </summary>
+
+![와드페이지gif](https://github.com/user-attachments/assets/3b9456f9-e8f0-42e5-a7f8-cb3a0fdd4f18)
+
+</details>
+
+<details>  
+  
+<summary> 게시판 조회, POST, NOTICE 생성  </summary>
+
+![0게시판조회](https://github.com/user-attachments/assets/8fa46f32-5d73-4cf8-9abd-981cab64352e)
+![1게시판글쓰기](https://github.com/user-attachments/assets/2ab84058-8deb-4c44-9f89-73e40d32bd87)
+![2게시판공지사항](https://github.com/user-attachments/assets/74f5f9f4-2ab0-4bb9-840c-dbfa72df9781)
+
+</details>
+
+<details>  
+  
+<summary> 게시판 기록 조회 후 삽입, 이미지 삽입, 동영상 삽입  </summary>
+
+![3게시판기록삽입](https://github.com/user-attachments/assets/ead9cd8e-6e04-4215-a201-56d3ce8f0873)
+![5게시판동영상삽입](https://github.com/user-attachments/assets/b2a366f3-0b72-43ea-956b-41d231d64093)
+
+</details>
+
+<details>  
+  
+<summary> 게시판 기록 조회 후 삽입, 이미지 삽입, 동영상 삽입  </summary>
+
+![7게시판검색](https://github.com/user-attachments/assets/96dba72b-76b1-486e-9a60-1dc1671ddfd2)
+![8게시판삭제](https://github.com/user-attachments/assets/65d3a5d7-9637-4cf9-8138-5561bc627c8d)
+![9게시판좋아요](https://github.com/user-attachments/assets/5ed8a67b-e66c-4db7-a173-c4ee342df083)
+
+</details>
+
+
